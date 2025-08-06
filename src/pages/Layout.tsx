@@ -4,13 +4,13 @@ import NavBar from "../components/NavBar";
 
 const Layout = () => {
   return (
-    <>
+    <div className="min-h-screen">
       <NavBar />
       <main className="prose p-5">
         <Outlet />
         <Toaster />
       </main>
-    </>
+    </div>
   );
 };
 
