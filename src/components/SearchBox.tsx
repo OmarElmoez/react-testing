@@ -10,12 +10,13 @@ const SearchBox = ({ onChange }: Props) => {
   return (
     <div>
       <input
-        type="text"
+        type="search"
         placeholder="Search..."
         className="input"
+        value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && searchTerm) onChange(searchTerm);
+          if (e.key === "Enter" && searchTerm.trim() !== '') onChange(searchTerm);
         }}
       />
     </div>
