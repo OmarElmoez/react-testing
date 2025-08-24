@@ -16,8 +16,18 @@ const ProductDetail = ({ productId }: { productId: number }) => {
 
     setLoading(true);
     fetch("/products/" + productId)
-      .then((res) => res.json())
-      .then((data) => setProduct(data))
+      .then(async (res) => {
+        if (!res.ok) {
+          // Handle 404 and other HTTP errors
+          if (res.status === 404) {
+            setProduct(undefined); // This will trigger "not found" message
+            return;
+          }
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        const data = await res.json();
+        setProduct(data);
+      })
       .catch((err) => setError((err as Error).message))
       .finally(() => setLoading(false));
   }, []);
