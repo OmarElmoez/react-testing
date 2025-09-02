@@ -18,9 +18,8 @@ const ProductDetail = ({ productId }: { productId: number }) => {
     fetch("/products/" + productId)
       .then(async (res) => {
         if (!res.ok) {
-          // Handle 404 and other HTTP errors
           if (res.status === 404) {
-            setProduct(undefined); // This will trigger "not found" message
+            setProduct(undefined); 
             return;
           }
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
