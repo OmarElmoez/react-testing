@@ -1,39 +1,25 @@
-import { useEffect, useState } from "react";
 import { Product } from "../entities";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 const ProductDetail = ({ productId }: { productId: number }) => {
-  const [product, setProduct] = useState<Product | undefined>(
-    undefined
-  );
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const {
+    data: product,
+    error,
+    isLoading,
+  } = useQuery<Product, Error>({
+    queryKey: ["products", productId],
+    queryFn: () =>
+      axios
+        .get<Product>("/products/" + productId)
+        .then((res) => res.data)
+  });
 
-  useEffect(() => {
-    if (!productId) {
-      setError("Invalid ProductId");
-      return;
-    }
-
-    setLoading(true);
-    fetch("/products/" + productId)
-      .then(async (res) => {
-        if (!res.ok) {
-          if (res.status === 404) {
-            setProduct(undefined); 
-            return;
-          }
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        }
-        const data = await res.json();
-        setProduct(data);
-      })
-      .catch((err) => setError((err as Error).message))
-      .finally(() => setLoading(false));
-  }, []);
-
+  if (!productId) return <div>invalid product id</div>
+  
   if (isLoading) return <div>Loading...</div>;
 
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error: {error?.message}</div>;
 
   if (!product) return <div>The given product was not found.</div>;
 
